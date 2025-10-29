@@ -1,17 +1,20 @@
-import { KeyboardAvoidingView, ScrollView, StyleSheet, View, Platform } from 'react-native';
-import React, { useState } from 'react';
+import Button from '@/components/AuthComponents/Button';
+import FooterAuth from '@/components/AuthComponents/FooterAuth';
 import HeaderAuth from '@/components/AuthComponents/HeaderAuth';
 import Input from '@/components/AuthComponents/Input';
 import { emailIcon, lockIcon, userIcon } from '@/constants/imags';
-import Button from '@/components/AuthComponents/Button';
-import FooterAuth from '@/components/AuthComponents/FooterAuth';
+import React, { useState } from 'react';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import VerifyEmailScreen from './verify-email';
 export default function SignUpScreen() {
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
+    const [pendingVerification, setPendingVerification] = useState(true);
     const signUp = () => {
         console.log(`Sign Up From here`);
     };
+    if (pendingVerification) return <VerifyEmailScreen email='hello@gmail.com' />
     return (
         <KeyboardAvoidingView
             style={styles.keyboardAvoidingView}

@@ -1,8 +1,8 @@
-import { View, Text, ImageProps, StyleSheet, TextInput, Image, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react';
 import { AUTH_COLORS } from '@/constants/colors';
 import { closeEyeIcon, viewEyeIcon } from '@/constants/imags';
-
+import { LinearGradient } from 'expo-linear-gradient';
+import React, { useState } from 'react';
+import { Image, ImageProps, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 const Input = ({
     label,
     setValue,
@@ -19,28 +19,53 @@ const Input = ({
     secureText?: boolean
 }) => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(!secureText);
+    const [isFocused, setIsFocused] = useState(false);
     const togglePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
     };
-
+    const handleFocus = () => setIsFocused(true);
+    const handleBlur = () => setIsFocused(false);
     return (
         <View style={styles.inputContainer}>
             <Text style={styles.labelStyle}>{label}</Text>
-
             <View style={styles.inputWrapper}>
-                <TextInput
-                    placeholder={placeholder}
-                    placeholderTextColor={AUTH_COLORS.INPUT_PLACEHOLDER_COLOR}
-                    onChangeText={setValue} // Fixed: changed from onChange to onChangeText
-                    value={value}
-                    secureTextEntry={secureText && !isPasswordVisible}
-                    style={styles.inputStyle}
-                />
-
+                {isFocused ? (
+                    <LinearGradient
+                        colors={[AUTH_COLORS.PRIMARY_BUTTON_BACKGROUND_COLOR_START, AUTH_COLORS.PRIMARY_BUTTON_BACKGROUND_COLOR_END]}
+                        style={styles.gradientBorder}
+                        start={{ x: 0.5, y: 0.3 }}
+                        end={{ x: 1, y: 0 }}
+                    >
+                        <View style={styles.inputInnerContainer}>
+                            <TextInput
+                                placeholder={placeholder}
+                                placeholderTextColor={AUTH_COLORS.INPUT_PLACEHOLDER_COLOR}
+                                onChangeText={setValue}
+                                value={value}
+                                secureTextEntry={secureText && !isPasswordVisible}
+                                style={styles.inputStyle}
+                                onFocus={handleFocus}
+                                onBlur={handleBlur}
+                            />
+                        </View>
+                    </LinearGradient>
+                ) : (
+                    <View style={[styles.inputInnerContainer, styles.defaultBorder]}>
+                        <TextInput
+                            placeholder={placeholder}
+                            placeholderTextColor={AUTH_COLORS.INPUT_PLACEHOLDER_COLOR}
+                            onChangeText={setValue}
+                            value={value}
+                            secureTextEntry={secureText && !isPasswordVisible}
+                            style={styles.inputStyle}
+                            onFocus={handleFocus}
+                            onBlur={handleBlur}
+                        />
+                    </View>
+                )}
                 <View style={styles.containerIconImage}>
                     <Image source={icon} style={styles.iconsSizes} />
                 </View>
-
                 {secureText && (
                     <TouchableOpacity
                         style={styles.containerEyeIconImage}
@@ -56,9 +81,7 @@ const Input = ({
         </View>
     );
 }
-
 export default Input;
-
 const styles = StyleSheet.create({
     inputContainer: {
         flexDirection: 'column',
@@ -73,29 +96,42 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
     },
+    gradientBorder: {
+        borderRadius: 15,
+        padding: 1,
+    },
+    inputInnerContainer: {
+        borderRadius: 15,
+        backgroundColor: AUTH_COLORS.BACKGROUND_SECONDARY_COLOR,
+        overflow: 'hidden',
+    },
+    defaultBorder: {
+        borderWidth: 1,
+        borderColor: AUTH_COLORS.BORDER_COLOR,
+    },
     inputStyle: {
         width: '100%',
         height: 50,
-        borderRadius: 15,
+        borderRadius: 13,
         paddingHorizontal: 40,
-        borderWidth: 0.2,
-        borderColor: '#fff',
-        backgroundColor: AUTH_COLORS.BACKGROUND_SECONDARY_COLOR,
+        backgroundColor: 'transparent',
         color: AUTH_COLORS.INPUT_PLACEHOLDER_COLOR,
     },
     containerIconImage: {
         position: 'absolute',
-        left: 10,
-        top: 10,
-        bottom: 10,
+        left: 13.5,
+        top: 14.5,
+        bottom: 15,
         justifyContent: 'center',
+        zIndex: 1,
     },
     containerEyeIconImage: {
         position: 'absolute',
-        right: 10,
-        top: 10,
-        bottom: 10,
+        right: 15,
+        top: 15,
+        bottom: 15,
         justifyContent: 'center',
+        zIndex: 1,
     },
     iconsSizes: {
         width: 24,

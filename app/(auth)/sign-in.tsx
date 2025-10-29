@@ -1,11 +1,10 @@
-import { KeyboardAvoidingView, ScrollView, StyleSheet, View, Platform } from 'react-native';
-import React, { useState } from 'react';
-import HeaderAuth from '@/components/AuthComponents/HeaderAuth';
-import Input from '@/components/AuthComponents/Input';
-import { emailIcon, lockIcon, viewEyeIcon } from '@/constants/imags';
 import Button from '@/components/AuthComponents/Button';
 import FooterAuth from '@/components/AuthComponents/FooterAuth';
-
+import HeaderAuth from '@/components/AuthComponents/HeaderAuth';
+import Input from '@/components/AuthComponents/Input';
+import { emailIcon, lockIcon } from '@/constants/imags';
+import React, { useState } from 'react';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 export default function SignInScreen() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');

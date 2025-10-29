@@ -1,14 +1,14 @@
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
-import React from 'react';
 import { AUTH_COLORS } from '@/constants/colors';
 import { LinearGradient } from 'expo-linear-gradient';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 const Button = ({ onPress, text }: { onPress: () => void, text: string }) => {
     return (
         <TouchableOpacity onPress={onPress} style={styles.buttonContainer}>
             <LinearGradient
                 colors={[AUTH_COLORS.PRIMARY_BUTTON_BACKGROUND_COLOR_START, AUTH_COLORS.PRIMARY_BUTTON_BACKGROUND_COLOR_END]}
                 style={styles.buttonStyle}
-                start={{ x: 0, y: 1 }}
+                start={{ x: 0.5, y: 0.3 }}
                 end={{ x: 1, y: 0 }}
             >
                 <Text style={styles.textStyle}>
