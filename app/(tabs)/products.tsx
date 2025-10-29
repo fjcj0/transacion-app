@@ -1,9 +1,9 @@
-import { View, Text } from 'react-native';
 import React from 'react';
+import { Text, View } from 'react-native';
 const ProductsScreen = () => {
     return (
-        <View>
-            <Text>Products</Text>
+        <View style={{ flex: 1, backgroundColor: 'black' }}>
+            <Text style={{ color: 'white' }}>Products</Text>
         </View>
     );
 }
