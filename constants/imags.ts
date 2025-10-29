@@ -6,3 +6,7 @@ export const viewEyeIcon = require('../assets/icons/view.png');
 export const starIcon = require('../assets/icons/star.png');
 export const arrowIcon = require('../assets/icons/curved-arrow-with-broken-line.png');
 export const profilePicture = require('../assets/pictures/profile.jpeg');
+export const dollarIcon = require('../assets/icons/dollar.png');
+export const freeLanceIcon = require('../assets/icons/free-time.png');
+export const gamingIcon = require('../assets/icons/console.png');
+export const farmingIcon = require('../assets/icons/planting.png');
