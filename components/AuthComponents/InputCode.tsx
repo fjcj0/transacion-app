@@ -55,8 +55,8 @@ export default InputCode;
 const styles = StyleSheet.create({
     inputWrapper: {
         position: 'relative',
-        width: 55,
-        height: 55,
+        width: 45,
+        height: 45,
     },
     gradientBorder: {
         borderRadius: 15,
