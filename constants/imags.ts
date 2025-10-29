@@ -1,5 +1,5 @@
 export const emailIcon = require('../assets/icons/email.png');
-export const lockIcon = require('../assets/icons/padlock.png');
+export const lockIcon = require('../assets/icons/shield.png');
 export const userIcon = require('../assets/icons/user.png');
 export const closeEyeIcon = require('../assets/icons/eye.png');
 export const viewEyeIcon = require('../assets/icons/view.png');
