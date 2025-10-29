@@ -1,20 +1,41 @@
 import Button from '@/components/AuthComponents/Button';
 import HeaderAuth from '@/components/AuthComponents/HeaderAuth';
 import InputCode from '@/components/AuthComponents/InputCode';
+import { useSignUp } from '@clerk/clerk-expo';
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 const VerifyEmailScreen = ({ email }: { email: string }) => {
+    const router = useRouter();
+    const { isLoaded, signUp, setActive } = useSignUp()
+    const [isLoadingVerify, setIsLoadingVerify] = useState(false);
     const [code, setCode] = useState(['', '', '', '', '', '']);
-    const verifyEmail = () => {
-        const verificationCode = code.join('');
-        console.log('Verification code:', verificationCode);
-    }
     const handleCodeChange = (text: string, index: number) => {
         const newCode = [...code];
         const numericText = text.replace(/[^0-9]/g, '');
         if (numericText.length <= 1) {
             newCode[index] = numericText;
             setCode(newCode);
+        }
+    }
+    const onVerifyPress = async () => {
+        if (!isLoaded) return;
+        setIsLoadingVerify(true);
+        try {
+            const current_code: any = code.join('');
+            const signUpAttempt = await signUp.attemptEmailAddressVerification({
+                code: current_code
+            });
+            if (signUpAttempt.status === 'complete') {
+                await setActive({ session: signUpAttempt.createdSessionId })
+                router.replace('/(tabs)')
+            } else {
+                console.error(JSON.stringify(signUpAttempt, null, 2))
+            }
+        } catch (err) {
+            console.error(JSON.stringify(err, null, 2))
+        } finally {
+            setIsLoadingVerify(false);
         }
     }
     return (
@@ -41,8 +62,9 @@ const VerifyEmailScreen = ({ email }: { email: string }) => {
                 </View>
                 <View style={styles.containerButton}>
                     <Button
-                        onPress={verifyEmail}
+                        onPress={onVerifyPress}
                         text='Verify Email'
+                        isLoading={isLoadingVerify}
                     />
                 </View>
             </ScrollView>

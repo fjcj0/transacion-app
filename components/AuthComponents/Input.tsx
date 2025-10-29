@@ -38,6 +38,7 @@ const Input = ({
                     >
                         <View style={styles.inputInnerContainer}>
                             <TextInput
+                                autoCapitalize='none'
                                 placeholder={placeholder}
                                 placeholderTextColor={AUTH_COLORS.INPUT_PLACEHOLDER_COLOR}
                                 onChangeText={setValue}

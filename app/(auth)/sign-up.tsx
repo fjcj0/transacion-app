@@ -3,18 +3,47 @@ import FooterAuth from '@/components/AuthComponents/FooterAuth';
 import HeaderAuth from '@/components/AuthComponents/HeaderAuth';
 import Input from '@/components/AuthComponents/Input';
 import { emailIcon, lockIcon, userIcon } from '@/constants/imags';
+import { useSignUp } from '@clerk/clerk-expo';
 import React, { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import VerifyEmailScreen from './verify-email';
 export default function SignUpScreen() {
+    const { isLoaded, signUp } = useSignUp();
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
-    const [pendingVerification, setPendingVerification] = useState(true);
-    const signUp = () => {
-        console.log(`Sign Up From here`);
-    };
-    if (pendingVerification) return <VerifyEmailScreen email='hello@gmail.com' />
+    const [isLoading, setIsLoading] = useState(false);
+    const [pendingVerification, setPendingVerification] = useState(false);
+    const onSignUp = async () => {
+        if (!isLoaded) return;
+        setIsLoading(true);
+        if (email.length === 0) {
+            Alert.alert('ERROR', 'Email field is required!!');
+            return;
+        }
+        if (password.length < 6) {
+            Alert.alert('ERROR', 'Password length at least 6 or more!!');
+            return;
+        }
+        if (name.length < 3) {
+            Alert.alert('ERROR', 'Name length at least 3 or more!!');
+            return;
+        }
+        try {
+            await signUp.create({
+                emailAddress: email,
+                password,
+                firstName: name,
+            });
+            await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
+            setPendingVerification(true);
+        } catch (err) {
+            console.log(JSON.stringify(err, null, 2));
+        } finally {
+            setIsLoading(false);
+        }
+    }
+    if (pendingVerification) return <VerifyEmailScreen email={email} />
     return (
         <KeyboardAvoidingView
             style={styles.keyboardAvoidingView}
@@ -55,8 +84,9 @@ export default function SignUpScreen() {
                     </View>
                     <View style={styles.containerButton}>
                         <Button
-                            onPress={signUp}
-                            text='Sign Up' />
+                            onPress={onSignUp}
+                            text='Sign Up'
+                            isLoading={isLoading} />
                     </View>
                 </View>
                 <View style={styles.footerContainer}>
