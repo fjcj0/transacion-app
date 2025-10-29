@@ -1,10 +1,19 @@
+import HeaderInformation from '@/components/InformationComponents/HeaderInformation';
+import { profilePicture } from '@/constants/imags';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 const InformationScreen = () => {
     return (
-        <View style={{ flex: 1, backgroundColor: 'black' }}>
-            <Text style={{ color: 'white' }}>Information</Text>
-        </View>
+        <ScrollView contentContainerStyle={styles.containerInformation}
+            style={{ backgroundColor: 'black' }}>
+            <HeaderInformation name='Omar' profilePicture={profilePicture} />
+        </ScrollView>
     );
 }
 export default InformationScreen;
+const styles = StyleSheet.create({
+    containerInformation: {
+        flex: 1,
+        backgroundColor: 'black',
+    },
+});

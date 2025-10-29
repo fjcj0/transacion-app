@@ -5,3 +5,4 @@ export const closeEyeIcon = require('../assets/icons/eye.png');
 export const viewEyeIcon = require('../assets/icons/view.png');
 export const starIcon = require('../assets/icons/star.png');
 export const arrowIcon = require('../assets/icons/curved-arrow-with-broken-line.png');
+export const profilePicture = require('../assets/pictures/profile.jpeg');
