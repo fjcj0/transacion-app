@@ -10,3 +10,7 @@ export const dollarIcon = require('../assets/icons/dollar.png');
 export const freeLanceIcon = require('../assets/icons/free-time.png');
 export const gamingIcon = require('../assets/icons/console.png');
 export const farmingIcon = require('../assets/icons/planting.png');
+export const netflixIcon = require('../assets/icons/netflix.png');
+export const spotityFiIcon = require('../assets/icons/spotify-logo.png');
+export const appleIcon = require('../assets/icons/apple-logo.png');
+export const metaIcon = require('../assets/icons/meta.png');

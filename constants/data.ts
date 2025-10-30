@@ -1,5 +1,5 @@
 import { TABS_COLORS } from "./colors";
-import { dollarIcon, farmingIcon, freeLanceIcon, gamingIcon } from "./imags";
+import { appleIcon, dollarIcon, farmingIcon, freeLanceIcon, gamingIcon, metaIcon, netflixIcon, spotityFiIcon } from "./imags";
 export const transactions = [
     {
         title: 'Housing',
@@ -100,5 +100,32 @@ export const incomes = [
         icon: farmingIcon,
         title: 'Farming',
         value: '$450.00'
+    },
+];
+
+export const spendings = [
+    {
+        icon: netflixIcon,
+        title: 'Netflix',
+        date: '2024-5-1',
+        value: '$259.99'
+    },
+    {
+        icon: spotityFiIcon,
+        title: 'Spotify',
+        date: '2023-2-10',
+        value: '$129.99'
+    },
+    {
+        icon: appleIcon,
+        title: 'Apple',
+        date: '2020-21-3',
+        value: '$199.99'
+    },
+    {
+        icon: metaIcon,
+        title: 'Meta',
+        date: '2025-6-2',
+        value: '$179.99'
     },
 ];
