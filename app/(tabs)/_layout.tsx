@@ -70,9 +70,10 @@ const TabsLayout = () => {
                 headerShown: false,
                 tabBarStyle: {
                     backgroundColor: TABS_COLORS.PRIMARY_BACKGROUND,
-                    marginHorizontal: 120,
+                    marginHorizontal: 110,
                     marginBottom: 50,
                     height: 65,
+                    paddingHorizontal: 10,
                     flexDirection: 'row',
                     borderRadius: 100,
                     borderTopWidth: 0,

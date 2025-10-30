@@ -4,8 +4,14 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 const Button = ({ onPress, text, isLoading }: { onPress: () => Promise<void>, text: string, isLoading: boolean }) => {
     return (
-        <TouchableOpacity onPress={onPress} style={styles.buttonContainer}
-            disabled={isLoading}>
+        <TouchableOpacity
+            onPress={onPress}
+            style={[
+                styles.buttonContainer,
+                isLoading && styles.loadingOpacity
+            ]}
+            disabled={isLoading}
+        >
             <LinearGradient
                 colors={[AUTH_COLORS.PRIMARY_BUTTON_BACKGROUND_COLOR_START, AUTH_COLORS.PRIMARY_BUTTON_BACKGROUND_COLOR_END]}
                 style={styles.buttonStyle}
@@ -13,11 +19,7 @@ const Button = ({ onPress, text, isLoading }: { onPress: () => Promise<void>, te
                 end={{ x: 1, y: 0 }}
             >
                 <Text style={styles.textStyle}>
-                    {!isLoading ?
-                        text
-                        :
-                        'Loading....'
-                    }
+                    {!isLoading ? text : 'Loading....'}
                 </Text>
             </LinearGradient>
         </TouchableOpacity>
@@ -40,5 +42,8 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
         fontSize: 20,
+    },
+    loadingOpacity: {
+        opacity: 0.5,
     }
 });

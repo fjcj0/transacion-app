@@ -129,3 +129,35 @@ export const spendings = [
         value: '$179.99'
     },
 ];
+
+
+export const products = [
+    {
+        'title': 'Chair',
+        'image': 'https://plus.unsplash.com/premium_photo-1705169612592-32610774a5d0?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Q2hhaXJ8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=900',
+        'salary': '$500',
+        'available': 40,
+        'companyIcon': netflixIcon,
+    },
+    {
+        'title': 'Football',
+        'image': 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Zm9vdGJhbHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=900',
+        'salary': '$40.5',
+        'available': 25,
+        'companyIcon': metaIcon,
+    },
+    {
+        'title': 'Iphone 16',
+        'image': 'https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8SVBIT05FfGVufDB8fDB8fHww&auto=format&fit=crop&q=60&w=900',
+        'salary': '$3050',
+        'available': 31,
+        'companyIcon': appleIcon,
+    },
+    {
+        'title': 'House',
+        'image': 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG91c2V8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=900',
+        'salary': '$120.99',
+        'available': 15,
+        'companyIcon': spotityFiIcon,
+    },
+];
