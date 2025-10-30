@@ -161,3 +161,47 @@ export const products = [
         'companyIcon': spotityFiIcon,
     },
 ];
+export const purchases = [
+    {
+        "id": 2,
+        "product_id": 1,
+        "user_id": 2,
+        "percent": "33.33%",
+        "quantity": 3,
+        "new_salary": "$1099.99",
+        "available": 1,
+        "created_at": "2025-10-28T20:06:05.724Z",
+        "updated_at": "2025-10-28T20:26:22.396Z",
+        "title": "iPhone 15 Pro",
+        "image": "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8SVBIT05FfGVufDB8fDB8fHww&auto=format&fit=crop&q=60&w=900",
+        "icon": metaIcon
+    },
+    {
+        "id": 3,
+        "product_id": 2,
+        "user_id": 2,
+        "percent": "50%",
+        "quantity": 2,
+        "new_salary": "$599.99",
+        "available": 5,
+        "created_at": "2025-10-29T10:15:30.000Z",
+        "updated_at": "2025-10-29T10:15:30.000Z",
+        "title": "MacBook Air",
+        "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8bGFwdG9wfGVufDB8fDB8fHww&auto=format&fit=crop&q=60&w=900",
+        "icon": appleIcon
+    },
+    {
+        "id": 4,
+        "product_id": 3,
+        "user_id": 2,
+        "percent": "25%",
+        "quantity": 4,
+        "new_salary": "$299.99",
+        "available": 3,
+        "created_at": "2025-10-27T14:20:45.000Z",
+        "updated_at": "2025-10-27T14:20:45.000Z",
+        "title": "AirPods Pro",
+        "image": "https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YWlycG9kc3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=900",
+        "icon": spotityFiIcon
+    }
+];
