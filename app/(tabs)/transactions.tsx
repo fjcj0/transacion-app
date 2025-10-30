@@ -11,8 +11,8 @@ const TransactionsScreen = () => {
             showsVerticalScrollIndicator={false}
             style={{ flex: 1, backgroundColor: 'black' }}>
             <HeaderAuth message={'Here you will find all your transactions!'} title={'Users Transactions'} />
-
             <ScrollView horizontal={true}
+                style={{ paddingLeft: 7 }}
                 contentContainerStyle={{ columnGap: 12 }}
                 showsHorizontalScrollIndicator={false}>
                 {transactions.map((transaction, index) => (
@@ -26,10 +26,10 @@ const TransactionsScreen = () => {
                     />
                 ))}
             </ScrollView>
-            <View style={{ marginVertical: 20, paddingBottom: 135 }}>
+            <View style={{ marginVertical: 20, paddingBottom: 135, paddingHorizontal: 13 }}>
                 <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}>Purchases</Text>
                 <Search />
-                <View style={{ marginTop: 15 }}>
+                <View>
                     <FlatList
                         data={purchases}
                         renderItem={({ item }) => (

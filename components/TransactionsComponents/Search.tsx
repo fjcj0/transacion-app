@@ -19,7 +19,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         columnGap: 5,
-        marginVertical: 20,
+        marginTop: 10,
+        marginBottom: 15,
     },
     inputSearchStyle: {
         width: '80%',
