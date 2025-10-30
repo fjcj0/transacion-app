@@ -69,14 +69,16 @@ const TabsLayout = () => {
             screenOptions={{
                 headerShown: false,
                 tabBarStyle: {
-                    backgroundColor: TABS_COLORS.PRIMARY_BACKGROUND,
+                    backgroundColor: '#0b0014',
+                    borderWidth: 0.3,
+                    borderTopWidth: 0.3,
+                    borderColor: 'white',
                     marginHorizontal: 110,
                     marginBottom: 50,
                     height: 65,
                     paddingHorizontal: 10,
                     flexDirection: 'row',
                     borderRadius: 100,
-                    borderTopWidth: 0,
                     alignItems: 'center',
                     justifyContent: 'center',
                     position: 'absolute',
