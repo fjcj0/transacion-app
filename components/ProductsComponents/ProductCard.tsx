@@ -15,7 +15,7 @@ import {
 interface ProductCardProps {
     image: string;
     title: string;
-    icon: ImageProps;
+    icon: string;
     salary: string;
     available: number;
 }
@@ -81,10 +81,10 @@ const ProductCard = ({ image, title, icon, salary, available }: ProductCardProps
                     <Text style={styles.title} numberOfLines={2}>{title}</Text>
                     <View style={styles.companyContainer}>
                         <View style={styles.companyIconContainer}>
-                            <Image source={icon} style={styles.companyIcon} />
+                            <Image source={{ uri: icon }} style={styles.companyIcon} />
                         </View>
                         <View style={styles.salaryContainer}>
-                            <Text style={styles.salary}>{salary}</Text>
+                            <Text style={styles.salary}>${salary}</Text>
                         </View>
                     </View>
 

@@ -1,13 +1,23 @@
 import { TABS_COLORS } from '@/constants/colors';
 import { FONT_NAMES } from '@/constants/fonts';
+import { useAuth } from '@clerk/clerk-expo';
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { Image, ImageProps, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-const HeaderInformation = ({ name, profilePicture }: { name: string, profilePicture: ImageProps }) => {
+import { Image, StyleSheet, Text, TouchableOpacity, View, Alert } from 'react-native';
+const HeaderInformation = ({ name, profilePicture }: { name: string, profilePicture: string }) => {
+    const { signOut } = useAuth();
+    const handleSignOut = async () => {
+        try {
+            await signOut();
+        } catch (error) {
+            console.error('Error signing out:', error);
+            Alert.alert('Error', 'Failed to sign out');
+        }
+    };
     return (
         <View style={styles.headerInformationContainer}>
-
             <View style={styles.leftHeaderInformation}>
-                <Image source={profilePicture} style={styles.profilePictureStyle} />
+                <Image source={{ uri: profilePicture }} style={styles.profilePictureStyle} />
                 <View style={styles.rightHeaderInformation}>
                     <Text style={styles.welcomeMessageStyle}>Hi, {name}</Text>
                     <View style={styles.lastTextLeftContainer}>
@@ -16,12 +26,14 @@ const HeaderInformation = ({ name, profilePicture }: { name: string, profilePict
                     </View>
                 </View>
             </View>
-            <View>
+            <View style={{ flexDirection: 'row', columnGap: 5, justifyContent: 'center', alignItems: 'center' }}>
                 <TouchableOpacity style={styles.buttonStyle}>
                     <Text style={styles.textButtonStyle}>Your Transactions</Text>
                 </TouchableOpacity>
+                <TouchableOpacity onPress={handleSignOut}>
+                    <Ionicons name='log-out' color={'white'} size={30} />
+                </TouchableOpacity>
             </View>
-
         </View>
     );
 }
@@ -60,8 +72,7 @@ const styles = StyleSheet.create({
         columnGap: 4,
         alignItems: 'center',
         justifyContent: 'center'
-    }
-    ,
+    },
     lastTextLeftHeader: {
         color: 'white',
         opacity: 0.5,

@@ -5,6 +5,7 @@ import { Slot } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { fonts } from '../fonts';
 import { Text, View } from 'react-native';
+import { AuthProvider } from '@/context/AuthContext';
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts(fonts);
   if (!fontsLoaded && !fontError) {
@@ -23,9 +24,11 @@ export default function RootLayout() {
   }
   return (
     <ClerkProvider tokenCache={tokenCache}>
-      <SafeScreen>
-        <Slot />
-      </SafeScreen>
+      <AuthProvider>
+        <SafeScreen>
+          <Slot />
+        </SafeScreen>
+      </AuthProvider>
     </ClerkProvider>
   );
 }

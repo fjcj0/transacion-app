@@ -6,17 +6,19 @@ import SpendingCard from '@/components/InformationComponents/SpendingCard';
 import TransactionCard from '@/components/InformationComponents/TransactionCard';
 import { incomes, spendings, transactions } from '@/constants/data';
 import { profilePicture } from '@/constants/imags';
+import { useAuthContext } from '@/context/AuthContext';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 const InformationScreen = () => {
+    const { userDetails } = useAuthContext();
     return (
         <ScrollView
             contentContainerStyle={styles.containerInformation}
             style={{ backgroundColor: 'black' }}
             showsVerticalScrollIndicator={false}
         >
-            <HeaderInformation name='Omar' profilePicture={profilePicture} />
-            <Money percentPurchase={40} money={5000} />
+            <HeaderInformation name={userDetails?.name || 'Omar'} profilePicture={userDetails?.profile_picture || profilePicture} />
+            <Money percentPurchase={40} money={userDetails?.money || 500} />
             <View style={{ marginVertical: 20 }}>
                 <ScrollView
                     horizontal={true}

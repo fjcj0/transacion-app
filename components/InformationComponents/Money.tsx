@@ -10,7 +10,7 @@ const Money = ({ money, percentPurchase }: { money: number, percentPurchase: num
         <View style={styles.containerMoney}>
             <View style={styles.leftContainerMoney}>
                 <Text style={{ color: 'white' }}>My <Text style={{ fontWeight: 'bold', fontFamily: FONT_NAMES.LILITA_ONE }}>Money</Text></Text>
-                <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 25, fontFamily: FONT_NAMES.LILITA_ONE }}>$ {money}</Text>
+                <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 25, fontFamily: FONT_NAMES.LILITA_ONE }}>${money}</Text>
             </View>
 
             <View style={styles.rightContainer}>
