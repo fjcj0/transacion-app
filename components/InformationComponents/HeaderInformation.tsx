@@ -29,23 +29,21 @@ const HeaderInformation = ({ name, profilePicture }: { name: string, profilePict
             }
             if (pickerResult.assets && pickerResult.assets.length > 0) {
                 const selectedImage = pickerResult.assets[0];
-                await uploadProfilePicture(selectedImage.uri);
+                await uploadProfilePicture(selectedImage.uri, selectedImage.type || 'image/jpeg');
             }
         } catch (error) {
-            console.log('Error picking image:', error instanceof Error ? error.message : error);
+            console.log('Error picking image:', error);
         }
     };
-    const uploadProfilePicture = async (imageUri: string) => {
+    const uploadProfilePicture = async (imageUri: string, mimeType: string) => {
         try {
             setIsUploadingPicture(true);
             const formData = new FormData();
-            const filename = imageUri.split('/').pop();
-            const match = /\.(\w+)$/.exec(filename || '');
-            const type = match ? `image/${match[1]}` : 'image/jpeg';
+            const filename = imageUri.split('/').pop() || 'profile-picture.jpg';
             formData.append('profile_picture', {
                 uri: imageUri,
-                name: filename || 'profile-picture.jpg',
-                type,
+                name: filename,
+                type: mimeType,
             } as any);
             const response = await axios.put(
                 `${process.env.EXPO_PUBLIC_SERVER_URL}/api/auth/update-profile/${userDetails?.id}`,
@@ -53,15 +51,25 @@ const HeaderInformation = ({ name, profilePicture }: { name: string, profilePict
                 {
                     headers: {
                         'Content-Type': 'multipart/form-data',
-                    }
+                    },
+                    timeout: 60000,
                 }
             );
             if (response.data?.user) {
                 setUserDetails(response.data.user);
                 Alert.alert('Success', 'Profile picture updated successfully!');
             }
-        } catch (error) {
-            console.log('Error uploading profile picture:', error instanceof Error ? error.message : error);
+        } catch (error: any) {
+            console.log('Error uploading profile picture:', error);
+            if (error.response) {
+                console.log('Server error:', error.response.data);
+                Alert.alert('Upload Failed', error.response.data.error || 'Server error occurred');
+            } else if (error.request) {
+                console.log('No response:', error.request);
+                Alert.alert('Upload Failed', 'No response from server. Please check your connection.');
+            } else {
+                console.log('Error:', error.message);
+            }
         } finally {
             setIsUploadingPicture(false);
         }
