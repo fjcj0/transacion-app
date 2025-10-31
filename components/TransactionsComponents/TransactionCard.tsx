@@ -23,7 +23,6 @@ const TransactionCard = ({ image, title, icon, salary, available }: {
             </View>
             <View style={styles.bodyContainer}>
                 <Text style={styles.title} numberOfLines={2}>{title}</Text>
-
                 <View style={styles.companyContainer}>
                     <View style={styles.companyIconContainer}>
                         <Image source={icon} style={styles.companyIcon} />

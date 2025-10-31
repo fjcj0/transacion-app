@@ -1,8 +1,10 @@
+import { useRouter } from 'expo-router';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 const AddTransactionButton = () => {
+    const router = useRouter();
     return (
-        <TouchableOpacity style={styles.buttonStyleAdd}>
+        <TouchableOpacity style={styles.buttonStyleAdd} onPress={() => { router.replace('/(tabs)/transactions') }}>
             <Text style={styles.textStyleAdd}>+</Text>
         </TouchableOpacity>
     );

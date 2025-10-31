@@ -7,8 +7,10 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View, Alert, ActivityIndicator } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { useRouter } from 'expo-router';
 const HeaderInformation = ({ name, profilePicture }: { name: string, profilePicture: string }) => {
     const { signOut } = useAuth();
+    const router = useRouter();
     const { userDetails, setUserDetails } = useAuthContext();
     const [isUploadingPicture, setIsUploadingPicture] = useState(false);
     const handleChangeProfilePicture = async () => {
@@ -107,7 +109,7 @@ const HeaderInformation = ({ name, profilePicture }: { name: string, profilePict
                 </View>
             </View>
             <View style={{ flexDirection: 'row', columnGap: 5, justifyContent: 'center', alignItems: 'center' }}>
-                <TouchableOpacity style={styles.buttonStyle}>
+                <TouchableOpacity style={styles.buttonStyle} onPress={() => { router.replace('/(tabs)/transactions') }}>
                     <Text style={styles.textButtonStyle}>Your Transactions</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={handleSignOut}>

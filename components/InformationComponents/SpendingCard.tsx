@@ -1,25 +1,34 @@
 import { TABS_COLORS } from '@/constants/colors';
 import React from 'react';
-import { Image, ImageProps, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 const SpendingCard = ({ icon, title, date, value }: {
-    icon: ImageProps
+    icon: string
     title: string,
     date: string,
     value: string
 }) => {
+    const formatDate = (dateString: string) => {
+        try {
+            const dateObj = new Date(dateString);
+            return dateObj.toISOString().split('T')[0];
+        } catch (error) {
+            return dateString.split('T')[0] || dateString;
+        }
+    };
+    const formattedDate = formatDate(date);
     return (
         <View style={styles.cardSpendingContainer}>
             <View style={styles.leftContainerSpendingCard}>
                 <View style={styles.imageContainerSpending}>
-                    <Image source={icon} style={styles.imageStyleSpending} resizeMode="contain" />
+                    <Image source={{ uri: icon }} style={styles.imageStyleSpending} resizeMode="contain" />
                 </View>
                 <View style={styles.infoCardSpendingContainer}>
                     <Text style={styles.textHeaderStyleSpending}>{title}</Text>
-                    <Text style={styles.textDateSpendingStyle}>{date}</Text>
+                    <Text style={styles.textDateSpendingStyle}>{formattedDate}</Text>
                 </View>
             </View>
             <View style={styles.rightContainerSpending}>
-                <Text style={styles.textValueSpendingStyle}>{value}</Text>
+                <Text style={styles.textValueSpendingStyle}>${value}</Text>
             </View>
         </View>
     );

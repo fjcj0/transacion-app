@@ -1,19 +1,19 @@
 import { TABS_COLORS } from '@/constants/colors';
 import { FONT_NAMES } from '@/constants/fonts';
 import React from 'react';
-import { Image, ImageProps, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 const IncomeCard = ({ title, icon, value }: {
     title: string,
-    icon: ImageProps,
+    icon: string,
     value: string
 }) => {
     return (
         <View style={styles.cardIncomeStyle}>
             <View style={styles.iconIncomeContainer}>
-                <Image source={icon} style={styles.iconIncomeStyle} />
+                <Image source={{ uri: icon }} style={styles.iconIncomeStyle} />
             </View>
             <Text style={styles.titleIncomeStyle}>{title}</Text>
-            <Text style={styles.moneyIncomeStyle}>{value}</Text>
+            <Text style={styles.moneyIncomeStyle}>${value}</Text>
         </View>
     );
 }

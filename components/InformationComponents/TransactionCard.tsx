@@ -23,7 +23,7 @@ const TransactionCard = ({ backgroundColor, color, title, money, percent }:
             borderRadius: 10
         }}>
             <Text style={{ fontWeight: 300, color, fontSize: 13, fontFamily: FONT_NAMES.LILITA_ONE }}>{title}</Text>
-            <Text style={{ fontWeight: 'bold', color, fontSize: 13 }}>{money}</Text>
+            <Text style={{ fontWeight: 'bold', color, fontSize: 13 }}>${money}</Text>
             <Text style={{ fontWeight: 300, color, fontSize: 13, paddingHorizontal: 7, paddingVertical: 4, borderRadius: 15, backgroundColor: '#FFFFFF66' }}>{percent}</Text>
         </View >
     )

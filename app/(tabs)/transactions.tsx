@@ -12,11 +12,13 @@ const TransactionsScreen = () => {
     const { userDetails } = useAuthContext();
     const [purchases, setPurchases] = useState([]);
     const [filteredPurchases, setFilteredPurchases] = useState([]);
-    const [transactions, setTransactions] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
+    const [transactions, setTransactions] = useState([]);
     const handleData = async () => {
         try {
             setIsHandlingData(true);
+            const responseTransactions = await axios.get(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/transaction/${userDetails?.id}`);
+            setTransactions(responseTransactions?.data?.transactions);
             const response = await axios.get(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/purchase/${userDetails?.id}`);
             setPurchases(response?.data?.purchases);
             setFilteredPurchases(response?.data?.purchases);
@@ -50,7 +52,6 @@ const TransactionsScreen = () => {
             showsVerticalScrollIndicator={false}
             style={{ flex: 1, backgroundColor: 'black' }}>
             <HeaderAuth message={'Here you will find all your transactions!'} title={'Users Transactions'} />
-
             <ScrollView horizontal={true}
                 style={{ paddingLeft: 7 }}
                 contentContainerStyle={{ columnGap: 12 }}
@@ -58,11 +59,11 @@ const TransactionsScreen = () => {
                 {transactions.map((transaction: any, index: number) => (
                     <TransactionCard
                         key={index}
-                        backgroundColor={transaction.backgroundColor}
-                        color={transaction.color}
-                        title={transaction.title}
-                        money={transaction.money}
-                        percent={transaction.percent}
+                        backgroundColor={transaction.background_color}
+                        color={transaction.text_color}
+                        title={transaction.product_title}
+                        money={transaction.total_money_sent}
+                        percent={transaction.purchase_percent}
                     />
                 ))}
             </ScrollView>
