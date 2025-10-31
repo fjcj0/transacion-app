@@ -1,9 +1,10 @@
 import { TABS_COLORS } from '@/constants/colors';
 import { FONT_NAMES } from '@/constants/fonts';
+import { useAuthContext } from '@/context/AuthContext';
+import axios from 'axios';
 import React, { useState } from 'react';
 import {
     Image,
-    ImageProps,
     StyleSheet,
     Text,
     TouchableOpacity,
@@ -11,29 +12,43 @@ import {
     Modal,
     FlatList,
     TextInput,
-    Alert
+    Alert,
+    ActivityIndicator
 } from 'react-native';
-const USERS = [
-    { id: '1', name: 'John Doe', email: 'john@example.com', avatar: '👨' },
-    { id: '2', name: 'Jane Smith', email: 'jane@example.com', avatar: '👩' },
-    { id: '3', name: 'Mike Johnson', email: 'mike@example.com', avatar: '👨‍💼' },
-    { id: '4', name: 'Sarah Wilson', email: 'sarah@example.com', avatar: '👩‍💼' },
-    { id: '5', name: 'David Brown', email: 'david@example.com', avatar: '👨‍🎓' },
-];
 interface PurchaseCardProps {
     image: string;
     title: string;
-    icon: ImageProps;
+    icon: string;
     salary: string;
     available: number;
+    productId: number;
 }
-const PurchaseCard = ({ image, title, icon, salary, available }: PurchaseCardProps) => {
+interface User {
+    id: string;
+    name: string;
+    email: string;
+    profile_picture: string;
+}
+const PurchaseCard = ({ image, title, icon, salary, available, productId }: PurchaseCardProps) => {
+    const [users, setUsers] = useState<User[] | null>(null);
+    const { userDetails } = useAuthContext();
+    const [isLoadingUsers, setIsLoadingUsers] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
-    const [selectedUser, setSelectedUser] = useState<any>(null);
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [transferQuantity, setTransferQuantity] = useState('1');
-    console.log('Selected User:', selectedUser);
+    const hanldeUsers = async () => {
+        try {
+            setIsLoadingUsers(true);
+            const response = await axios.get(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/auth/users/${userDetails?.id}`);
+            setUsers(response?.data?.users);
+        } catch (error) {
+            setUsers([]);
+        } finally {
+            setIsLoadingUsers(false);
+        }
+    }
     const onPress = () => {
-        console.log('Transfer button pressed');
+        hanldeUsers();
         setModalVisible(true);
     }
     const handleTransfer = () => {
@@ -42,7 +57,7 @@ const PurchaseCard = ({ image, title, icon, salary, available }: PurchaseCardPro
             return;
         }
         const quantity = parseInt(transferQuantity);
-        if (!quantity || quantity <= 0) {
+        if (isNaN(quantity) || quantity <= 0) {
             Alert.alert('Error', 'Please enter a valid quantity');
             return;
         }
@@ -50,13 +65,6 @@ const PurchaseCard = ({ image, title, icon, salary, available }: PurchaseCardPro
             Alert.alert('Error', `Only ${available} items available for transfer`);
             return;
         }
-        console.log('Transfer details:', {
-            product: title,
-            quantity: quantity,
-            transferTo: selectedUser.name,
-            userEmail: selectedUser.email,
-            originalSalary: salary
-        });
         Alert.alert(
             'Transfer Successful',
             `You transferred ${quantity} ${title} to ${selectedUser.name}`,
@@ -79,11 +87,10 @@ const PurchaseCard = ({ image, title, icon, salary, available }: PurchaseCardPro
         setModalVisible(false);
         resetForm();
     };
-    const handleUserSelect = (user: any) => {
-        console.log('User selected:', user.name);
+    const handleUserSelect = (user: User) => {
         setSelectedUser(user);
     };
-    const renderUserItem = ({ item }: { item: any }) => (
+    const renderUserItem = ({ item }: { item: User }) => (
         <TouchableOpacity
             style={[
                 styles.userItem,
@@ -92,7 +99,11 @@ const PurchaseCard = ({ image, title, icon, salary, available }: PurchaseCardPro
             onPress={() => handleUserSelect(item)}
             activeOpacity={0.7}
         >
-            <Text style={styles.userAvatar}>{item.avatar}</Text>
+            <Image
+                source={{ uri: item.profile_picture }}
+                style={styles.userAvatar}
+                resizeMode="cover"
+            />
             <View style={styles.userInfo}>
                 <Text style={styles.userName}>{item.name}</Text>
                 <Text style={styles.userEmail}>{item.email}</Text>
@@ -116,7 +127,7 @@ const PurchaseCard = ({ image, title, icon, salary, available }: PurchaseCardPro
                     <Text style={styles.title} numberOfLines={2}>{title}</Text>
                     <View style={styles.companyContainer}>
                         <View style={styles.companyIconContainer}>
-                            <Image source={icon} style={styles.companyIcon} />
+                            <Image source={{ uri: icon }} style={styles.companyIcon} />
                         </View>
                         <View style={styles.salaryContainer}>
                             <Text style={styles.salary}>{salary}</Text>
@@ -148,26 +159,44 @@ const PurchaseCard = ({ image, title, icon, salary, available }: PurchaseCardPro
                             <TextInput
                                 style={styles.textInput}
                                 value={transferQuantity}
-                                onChangeText={setTransferQuantity}
+                                onChangeText={(text) => {
+                                    if (/^\d*$/.test(text)) {
+                                        setTransferQuantity(text);
+                                    }
+                                }}
                                 keyboardType="numeric"
                                 placeholder="Enter quantity"
                                 placeholderTextColor="#999"
+                                maxLength={3}
                             />
                         </View>
                         <View style={styles.userSelectionContainer}>
                             <Text style={styles.inputLabel}>Select User to Transfer To</Text>
                             <View style={styles.usersListContainer}>
-                                <FlatList
-                                    data={USERS}
-                                    renderItem={renderUserItem}
-                                    keyExtractor={(item) => item.id}
-                                    showsVerticalScrollIndicator={false}
-                                    ListEmptyComponent={
-                                        <Text style={styles.emptyText}>No users available</Text>
-                                    }
-                                />
+                                {isLoadingUsers ? (
+                                    <View style={styles.loadingContainer}>
+                                        <ActivityIndicator
+                                            size="large"
+                                            color={TABS_COLORS.SECONDARY_COLOR}
+                                        />
+                                        <Text style={styles.loadingText}>Loading users...</Text>
+                                    </View>
+                                ) : (
+                                    <FlatList
+                                        data={users}
+                                        renderItem={renderUserItem}
+                                        keyExtractor={(item) => item.id}
+                                        showsVerticalScrollIndicator={false}
+                                        ListEmptyComponent={
+                                            <Text style={styles.emptyText}>
+                                                {users === null ? 'Loading...' : 'No users available'}
+                                            </Text>
+                                        }
+                                    />
+                                )}
                             </View>
                         </View>
+
                         <View style={styles.modalButtonsContainer}>
                             <TouchableOpacity
                                 style={[styles.modalButton, styles.cancelButton]}
@@ -182,10 +211,10 @@ const PurchaseCard = ({ image, title, icon, salary, available }: PurchaseCardPro
                                 style={[
                                     styles.modalButton,
                                     styles.confirmButton,
-                                    (!selectedUser || !transferQuantity) && styles.disabledButton
+                                    (!selectedUser || !transferQuantity || isLoadingUsers) && styles.disabledButton
                                 ]}
                                 onPress={handleTransfer}
-                                disabled={!selectedUser || !transferQuantity}
+                                disabled={!selectedUser || !transferQuantity || isLoadingUsers}
                                 activeOpacity={0.7}
                             >
                                 <Text style={styles.modalButtonText}>
@@ -354,6 +383,17 @@ const styles = StyleSheet.create({
         maxHeight: 200,
         minHeight: 150,
     },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: 150,
+    },
+    loadingText: {
+        color: 'white',
+        marginTop: 10,
+        fontSize: 14,
+    },
     userItem: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -369,9 +409,14 @@ const styles = StyleSheet.create({
         borderColor: TABS_COLORS.SECONDARY_COLOR,
         borderWidth: 2,
     },
+    // FIXED: Added proper styling for user avatar image
     userAvatar: {
-        fontSize: 24,
+        width: 40,
+        height: 40,
+        borderRadius: 20,
         marginRight: 15,
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.3)',
     },
     userInfo: {
         flex: 1,
@@ -390,20 +435,6 @@ const styles = StyleSheet.create({
         color: TABS_COLORS.SECONDARY_COLOR,
         fontSize: 18,
         fontWeight: 'bold',
-    },
-    summaryContainer: {
-        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-        padding: 15,
-        borderRadius: 10,
-        marginVertical: 15,
-        borderWidth: 1,
-        borderColor: TABS_COLORS.SECONDARY_COLOR,
-    },
-    summaryText: {
-        color: 'white',
-        fontSize: 16,
-        fontWeight: '600',
-        textAlign: 'center',
     },
     modalButtonsContainer: {
         flexDirection: 'row',
@@ -443,7 +474,6 @@ const styles = StyleSheet.create({
         color: 'lightgray',
         textAlign: 'center',
         fontSize: 14,
-        fontStyle: 'italic',
         padding: 30,
     },
 });

@@ -3,7 +3,6 @@ import { FONT_NAMES } from '@/constants/fonts';
 import React, { useState } from 'react';
 import {
     Image,
-    ImageProps,
     StyleSheet,
     Text,
     TouchableOpacity,
@@ -34,17 +33,10 @@ const ProductCard = ({ image, title, icon, salary, available }: ProductCardProps
             Alert.alert('Error', 'Please enter a valid salary');
             return;
         }
-
         if (quantityNum > available) {
             Alert.alert('Error', `Only ${available} items available`);
             return;
         }
-        console.log('Purchase details:', {
-            product: title,
-            quantity: quantityNum,
-            newSalary: salaryNum,
-            originalSalary: salary
-        });
         Alert.alert(
             'Purchase Successful',
             `You purchased ${quantity} item(s) with salary $${salaryNum}`,
@@ -87,7 +79,6 @@ const ProductCard = ({ image, title, icon, salary, available }: ProductCardProps
                             <Text style={styles.salary}>${salary}</Text>
                         </View>
                     </View>
-
                     <View style={styles.availableContainer}>
                         <Text style={styles.available}>{available} available</Text>
                     </View>
@@ -181,6 +172,7 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 14,
         fontWeight: 'bold',
+        fontFamily: FONT_NAMES.NUNITO
     },
     companyContainer: {
         flexDirection: 'row',
@@ -214,6 +206,7 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 12,
         fontWeight: '500',
+        fontFamily: FONT_NAMES.NUNITO
     },
     availableContainer: {
         backgroundColor: 'rgba(128, 128, 128, 0.2)',
@@ -228,6 +221,7 @@ const styles = StyleSheet.create({
         color: 'lightgray',
         fontSize: 12,
         fontWeight: '500',
+        fontFamily: FONT_NAMES.NUNITO
     },
     buttonStyleBuy: {
         width: 100,
@@ -241,7 +235,7 @@ const styles = StyleSheet.create({
     textStyleButton: {
         fontWeight: 'bold',
         color: 'white',
-        fontFamily: FONT_NAMES.COMIC_NEUE
+        fontFamily: FONT_NAMES.NUNITO
     },
     modalOverlay: {
         flex: 1,
@@ -309,6 +303,8 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         textAlign: 'center',
+        fontFamily: FONT_NAMES.NUNITO
+
     },
     modalButtonsContainer: {
         flexDirection: 'row',
