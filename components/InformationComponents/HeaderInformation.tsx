@@ -1,11 +1,71 @@
 import { TABS_COLORS } from '@/constants/colors';
 import { FONT_NAMES } from '@/constants/fonts';
+import { useAuthContext } from '@/context/AuthContext';
 import { useAuth } from '@clerk/clerk-expo';
 import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View, Alert } from 'react-native';
+import axios from 'axios';
+import React, { useState } from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View, Alert, ActivityIndicator } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 const HeaderInformation = ({ name, profilePicture }: { name: string, profilePicture: string }) => {
     const { signOut } = useAuth();
+    const { userDetails, setUserDetails } = useAuthContext();
+    const [isUploadingPicture, setIsUploadingPicture] = useState(false);
+    const handleChangeProfilePicture = async () => {
+        try {
+            const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (!permissionResult.granted) {
+                Alert.alert('Permission Required', 'Sorry, we need camera roll permissions to change your profile picture.');
+                return;
+            }
+            const pickerResult = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                aspect: [1, 1],
+                quality: 0.8,
+            });
+            if (pickerResult.canceled) {
+                return;
+            }
+            if (pickerResult.assets && pickerResult.assets.length > 0) {
+                const selectedImage = pickerResult.assets[0];
+                await uploadProfilePicture(selectedImage.uri);
+            }
+        } catch (error) {
+            console.log('Error picking image:', error instanceof Error ? error.message : error);
+        }
+    };
+    const uploadProfilePicture = async (imageUri: string) => {
+        try {
+            setIsUploadingPicture(true);
+            const formData = new FormData();
+            const filename = imageUri.split('/').pop();
+            const match = /\.(\w+)$/.exec(filename || '');
+            const type = match ? `image/${match[1]}` : 'image/jpeg';
+            formData.append('profile_picture', {
+                uri: imageUri,
+                name: filename || 'profile-picture.jpg',
+                type,
+            } as any);
+            const response = await axios.put(
+                `${process.env.EXPO_PUBLIC_SERVER_URL}/api/auth/update-profile/${userDetails?.id}`,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    }
+                }
+            );
+            if (response.data?.user) {
+                setUserDetails(response.data.user);
+                Alert.alert('Success', 'Profile picture updated successfully!');
+            }
+        } catch (error) {
+            console.log('Error uploading profile picture:', error instanceof Error ? error.message : error);
+        } finally {
+            setIsUploadingPicture(false);
+        }
+    };
     const handleSignOut = async () => {
         try {
             await signOut();
@@ -17,7 +77,19 @@ const HeaderInformation = ({ name, profilePicture }: { name: string, profilePict
     return (
         <View style={styles.headerInformationContainer}>
             <View style={styles.leftHeaderInformation}>
-                <Image source={{ uri: profilePicture }} style={styles.profilePictureStyle} />
+                <TouchableOpacity onPress={handleChangeProfilePicture} disabled={isUploadingPicture}>
+                    <View style={styles.profilePictureContainer}>
+                        <Image
+                            source={{ uri: profilePicture }}
+                            style={styles.profilePictureStyle}
+                        />
+                        {isUploadingPicture && (
+                            <View style={styles.uploadingOverlay}>
+                                <ActivityIndicator size="small" color="white" />
+                            </View>
+                        )}
+                    </View>
+                </TouchableOpacity>
                 <View style={styles.rightHeaderInformation}>
                     <Text style={styles.welcomeMessageStyle}>Hi, {name}</Text>
                     <View style={styles.lastTextLeftContainer}>
@@ -52,10 +124,24 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         columnGap: 10,
     },
+    profilePictureContainer: {
+        position: 'relative',
+    },
     profilePictureStyle: {
         width: 60,
         height: 60,
         borderRadius: 50,
+    },
+    uploadingOverlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        borderRadius: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     rightHeaderInformation: {
         flexDirection: 'column',

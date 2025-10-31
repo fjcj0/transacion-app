@@ -14,6 +14,7 @@ interface AuthContextType {
     isLoadingUser: boolean;
     signIn: () => Promise<void>;
     logOut: () => void;
+    setUserDetails: any
 }
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -76,7 +77,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
     }, [user, isSignedIn, userLoaded, userDetails, signIn, logOut]);
     return (
-        <AuthContext.Provider value={{ userDetails, isLoadingUser, signIn, logOut }}>
+        <AuthContext.Provider value={{ userDetails, isLoadingUser, signIn, logOut, setUserDetails }}>
             {children}
         </AuthContext.Provider>
     );
