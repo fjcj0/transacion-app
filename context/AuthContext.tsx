@@ -14,7 +14,7 @@ interface AuthContextType {
     isLoadingUser: boolean;
     signIn: () => Promise<void>;
     logOut: () => void;
-    setUserDetails: any
+    setUserDetails: any;
 }
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -24,7 +24,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isLoadingUser, setIsLoadingUser] = useState(false);
     const signInCalledRef = useRef(false);
     const signIn = useCallback(async () => {
-        if (!user || signInCalledRef.current) return;
+        if (!user || signInCalledRef.current || !userLoaded) {
+            return;
+        }
+        if (!user.id || !user.firstName || !user.emailAddresses?.[0]?.emailAddress) {
+            console.log("Waiting for complete user data...");
+            return;
+        }
         try {
             setIsLoadingUser(true);
             signInCalledRef.current = true;
@@ -49,21 +55,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                     }
                 }
             );
-            setUserDetails(response.data.user);
+            if (response.data.user) {
+                setUserDetails(response.data.user);
+            }
         } catch (error: any) {
             console.log("Sign in error details:");
             console.log("Error message:", error.message);
             console.log("Error code:", error.code);
             if (error.response) {
                 console.log("Server error:", error.response.status, error.response.data);
+                if (error.response.status === 400) {
+                    console.log("Missing data error - resetting signInCalledRef");
+                    signInCalledRef.current = false;
+                }
             } else if (error.request) {
                 console.log("No response received. Check if server is running.");
+                signInCalledRef.current = false;
+            } else {
+                signInCalledRef.current = false;
             }
-            signInCalledRef.current = false;
         } finally {
             setIsLoadingUser(false);
         }
-    }, [user]);
+    }, [user, userLoaded]);
     const logOut = useCallback(() => {
         setUserDetails(null);
         signInCalledRef.current = false;
@@ -71,7 +85,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         if (!userLoaded) return;
         if (user && isSignedIn && !userDetails && !signInCalledRef.current) {
-            signIn();
+            const timer = setTimeout(() => {
+                signIn();
+            }, 500);
+            return () => clearTimeout(timer);
         } else if ((!user || !isSignedIn) && userDetails) {
             logOut();
         }
