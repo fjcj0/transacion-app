@@ -28,7 +28,6 @@ const InformationScreen = () => {
     };
     const handleIncomes = async () => {
         try {
-            setIsLoadingInformation(true);
             if (userDetails?.id) {
                 const responseIncomes = await axios.get(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/auth/get-income/${userDetails?.id}`);
                 setIncomes(responseIncomes?.data?.user_incomes);
@@ -39,7 +38,6 @@ const InformationScreen = () => {
     };
     const handleLosses = async () => {
         try {
-            setIsLoadingInformation(true);
             if (userDetails?.id) {
                 const responseLosses = await axios.get(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/auth/get-loss/${userDetails?.id}`);
                 setLosses(responseLosses?.data?.user_losses);
@@ -48,23 +46,27 @@ const InformationScreen = () => {
             console.log(error instanceof Error ? error.message : error);
         }
     };
-    useEffect(() => {
+    const fetchAllData = async () => {
         try {
+            setIsLoadingInformation(true);
             if (userDetails?.id) {
-                handleTransactions();
-                handleIncomes();
-                handleLosses();
+                await Promise.all([
+                    handleTransactions(),
+                    handleIncomes(),
+                    handleLosses()
+                ]);
             }
         } catch (error) {
             console.log(error instanceof Error ? error.message : error);
         } finally {
             setIsLoadingInformation(false);
         }
+    };
+    useEffect(() => {
+        fetchAllData();
     }, [userDetails?.id]);
-    if (isLoadingInformation) {
-        return (
-            <CenteredSpinner />
-        )
+    if (isLoadingInformation || !userDetails?.id) {
+        return <CenteredSpinner />;
     }
     return (
         <ScrollView
@@ -129,7 +131,7 @@ const InformationScreen = () => {
             </View>
         </ScrollView>
     );
-}
+};
 export default InformationScreen;
 const styles = StyleSheet.create({
     containerInformation: {
